@@ -1,4 +1,5 @@
-export interface CatRequest {
+// interfaces não são testadas, porque não existem em runtime
+export interface Cat {
     name: string,
     birth_date: Date,
     age: number,

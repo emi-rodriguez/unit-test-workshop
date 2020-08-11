@@ -1,5 +1,5 @@
-export class CatNotFound extends Error{
-    constructor (name: string) {
+export class CatNotFound extends Error{  // todas as classes exportadas devem ser testadas para definição (.shouldBeDefined)
+    constructor (name: string) {         // estes testes também poderiam verificar o formato do erro, para não precisar fazê-lo no teste do controller.
         super(JSON.stringify({ message: `${name} isn't here :(. Maybe they haven't been adopted yet?`}, null, 2))
         Error.captureStackTrace(this, CatNotFound)
       }
