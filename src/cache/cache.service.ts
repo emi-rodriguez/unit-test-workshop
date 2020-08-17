@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common'
-import { Redis } from 'ioredis'
+import * as Redis from 'ioredis'
 
 import { CacheNotConnected } from './cache-errors'
+import { CantDelYourCat } from '../cat/cat-errors'
 
 // este teste requer o mock de uma biblioteca que utilizamos
 // para fazer esse mock utilizaremos o jest.mock()
@@ -10,10 +11,15 @@ import { CacheNotConnected } from './cache-errors'
 // nas horas de mockar uma biblioteca, a documentação (no nosso caso, do ioredis) é sua melhor amiga.
 @Injectable()
 export class CacheService {
-    private readonly client: Redis
+    readonly client: Redis.Redis
 
     constructor(){
-        this.client = new Redis()
+        this.client = this.connect()
+    }
+
+    connect(): Redis.Redis {
+        const client = new Redis()
+        return client
     }
 
     checkConnection (): boolean {
@@ -30,11 +36,16 @@ export class CacheService {
         return this.client.get(key)
     }
 
-    set(key: string, value = ''): Promise<string>{ 
+    set(key: string, value = ''): Promise<string>{
         // um valor padrão assignado como o da string vazia no parametro 'value' conta como uma branch e deve ser testado como tal
         // para testar essa branch, basta chamar a função com valor nulo neste parâmetro
         this.checkConnection()
 
         return this.client.set(key, value)
+    }
+
+    // meme function
+    del(catName:string): any {
+        throw new CantDelYourCat(catName)
     }
 }
